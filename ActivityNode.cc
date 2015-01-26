@@ -13,7 +13,7 @@ using namespace std;
 
 void ActivityNode::Represent()
 {
-  cout<<"Name:"<<act_name<<", duration:"<<act_duration<<", predecessors:"<<act_predecessors<<", Cost:"<<act_cost<<", Min Start:"<<min_start<<", Min End: "<< min_end<<endl;
+  cout<<"Name:"<<act_name<<", duration:"<<act_duration<<", Cost:"<<act_cost<<", Min Start:"<<min_start<<", Min End: "<< min_end<<", Max Start:"<<max_start<<", Max End:"<<max_end<<endl;
 }
 
 ActivityNode::ActivityNode(string name, int duration, string pred, int cost)

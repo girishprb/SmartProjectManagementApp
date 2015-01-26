@@ -35,6 +35,8 @@ private:
   SmartProjMgnt& operator=(SmartProjMgnt const&){ };  
   void ComputePERTValsFwd();
   void ComputePERTValsRwnd();
+  void AddFinishNode();
   std::vector<ActivityNode*> starting_points;
+  int proj_total_duration;
 };
 #endif
