@@ -5,6 +5,7 @@
   Description:
  */
 #include "SmartProjMgnt.h"
+#include <iostream>
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -17,6 +18,8 @@ int main(int argc, char *argv[])
   
   // Read the activity input file
   SmartProjMgnt::Instance()->ReadActivity(argv[1]);
+  SmartProjMgnt::Instance()->CreateLinks();
+  SmartProjMgnt::Instance()->ComputePERTVals();
   SmartProjMgnt::Instance()->PrintContents();
   SmartProjMgnt::Instance()->DeleteAll();
   return 0;

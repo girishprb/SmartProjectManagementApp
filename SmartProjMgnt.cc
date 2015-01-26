@@ -9,7 +9,6 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <stddef.h>
 #include "Utils.h"
 #include "SmartProjMgnt.h"
 #include "ActivityNode.h"
@@ -100,4 +99,85 @@ void SmartProjMgnt::ReadActivity(char * fileName)
     //Add dependencies once all nodes are created
     file_act.close();
   }
+}
+
+void SmartProjMgnt::CreateLinks()
+{
+  //Iterate through the string predecessors for all activities 
+  std::vector<std::string> vector_pred;
+  string str_pred;
+  for(unordered_map<string, ActivityNode*>::iterator it_map = map.begin(); it_map != map.end(); ++it_map)
+  {
+    vector_pred = split(it_map->second->GetStrPredecessor(), ',');
+    //For each item, add to neighbor vector accordingly
+    for (vector<string>::iterator it_vect = vector_pred.begin() ; it_vect != vector_pred.end(); ++it_vect)
+    {
+      if(it_vect->compare("-")!=0)
+      {
+	//Add Predecessor
+	it_map->second->AddPredecessor(map[*it_vect]);
+
+	//Add Successor
+	map[*it_vect]->AddSuccessor(it_map->second);
+      }
+      else
+      {
+	//If starting point, add to the vector list
+	starting_points.push_back(it_map->second);
+      }
+    }
+  }
+}
+
+void SmartProjMgnt::ComputePERTVals()
+{
+  ComputePERTValsFwd();
+  ComputePERTValsRwnd();
+}
+
+void SmartProjMgnt::ComputePERTValsFwd()
+{
+  //Temporary string,bool hash-table to store results
+  unordered_map<string, bool> map_results;
+  //Iterate through the starting list and update min_start and min_end values
+  for (vector<ActivityNode*>::iterator it_vect = starting_points.begin() ; it_vect != starting_points.end(); ++it_vect)
+  {
+    (*it_vect)->SetMinStart(0);
+    (*it_vect)->SetMinEnd((*it_vect)->GetActivityDuration()); 
+    map_results[(*it_vect)->GetActivityName()] = true;
+  }
+  
+  //Iterate through the map: for each, check their predecessors' values are updated
+  while(map_results.size() != map.size())
+  {
+    for(unordered_map<string, ActivityNode*>::iterator it_map = map.begin(); it_map != map.end(); ++it_map)
+    {
+      if(map_results.find(it_map->first) != map_results.end() && map_results[it_map->first])
+	break;
+
+      //Check if the predecessors have valid min_end values
+      vector<ActivityNode*> predecessors = it_map->second->GetPredecessors();
+      int end = -1;
+      for (vector<ActivityNode*>::iterator it_vect = predecessors.begin(); it_vect != predecessors.end(); ++it_vect)
+      {
+	//Find the maximum in min_end duration, thats the start date
+	if((*it_vect)->GetMinEnd() > end)
+	  end = (*it_vect)->GetMinEnd();
+      }
+      
+      if(end != -1)
+      {
+	//Add the activity duration 
+	it_map->second->SetMinStart(end);
+	it_map->second->SetMinEnd(end + it_map->second->GetActivityDuration());
+	map_results[it_map->first] = true;
+      }
+    } //End of For
+  } //End of While
+  cout<<"End of PERT fwd result calc"<< endl;
+}
+
+void SmartProjMgnt::ComputePERTValsRwnd()
+{
+
 }
