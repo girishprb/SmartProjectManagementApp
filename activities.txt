@@ -1,5 +1,17 @@
-A|3|-|500
-B|5|A|400
-C|6|B|600 
-D|2|A|345
-F|3|D|345
+1|1|-|Project Launch|PM
+2|1|1|Site Survey|SE1
+3|20|2|System Design-1|SA
+4|15|3|System Design-2|SA
+5|35|3|Coding/Testing|P
+6|15|5,8|Software Integration|A,P
+7|1|4|Order Hardware|SE
+8|15|7|Build|C
+9|1|6|Delivery|C
+10|6|9|Unpack/Assemble|SE2
+11|3|10|Connect Switches|SE2
+12|5|10|Cabling|C
+13|4|11,12|Integrate/Test|SE1,SA
+14|4|15|End-User Training|A
+15|1|13|User Acceptance|PM
+16|1|14|Closure Meeting|PM
+

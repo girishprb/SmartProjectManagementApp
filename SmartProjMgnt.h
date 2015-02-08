@@ -13,6 +13,9 @@
 #include <unordered_map>
 #include "ActivityNode.h"
 
+#define MAX_DURATION_VAL 100000
+#define INVALID_DURATION_VAL -1
+
 //Singleton class
 class SmartProjMgnt
 {

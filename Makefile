@@ -19,7 +19,7 @@ ActivityNode.o:  ActivityNode.cc ActivityNode.h
 #	$(CC) $(CFLAGS) -c Utils.cc
 
 SmartProjMgnt.o:  SmartProjMgnt.cc SmartProjMgnt.h ActivityNode.h Utils.h Utils.cc
-	$(CC) $(CFLAGS) -c SmartProjMgnt.cc
+	$(CC) $(CFLAGS) -c SmartProjMgnt.cc Utils.h
 
 $(TARGET): SmartProjMgnt.o  ActivityNode.o #Utils.o
 	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).cc SmartProjMgnt.o  ActivityNode.o #Utils.o

@@ -93,7 +93,12 @@ void SmartProjMgnt::ReadActivity(char * fileName)
       //Split string based on |
       activity = split(line, '|');
       //Create Nodes per line
-      map[activity[0]] = new ActivityNode(activity[0], std::stoi(activity[1], nullptr), activity[2], std::stoi(activity[3], nullptr));
+      //ActivityNode(string id, float duration, std::string pred, std::string desc, std::string skillset, int cost);
+      map[activity[0]] = new ActivityNode(activity[0],
+					  std::stof(activity[1], nullptr), 
+					  activity[2], 
+					  activity[3],
+					  activity[4]);
     }
     
     //Add dependencies once all nodes are created
@@ -161,20 +166,20 @@ void SmartProjMgnt::ComputePERTValsFwd()
 
       //Check if the predecessors have valid min_end values
       vector<ActivityNode*> predecessors = it_map->second->GetPredecessors();
-      int end = -1;
+      int end = INVALID_DURATION_VAL;
       for (vector<ActivityNode*>::iterator it_vect = predecessors.begin(); it_vect != predecessors.end(); ++it_vect)
       {
 	//Find the maximum in min_end duration, thats the start date
 	if((*it_vect)->GetMinEnd() > end)
 	  end = (*it_vect)->GetMinEnd();
-	else if((*it_vect)->GetMinEnd() == -1)
+	else if((*it_vect)->GetMinEnd() == INVALID_DURATION_VAL)
 	{
-	  end = -1;
+	  end = INVALID_DURATION_VAL;
 	  break;
 	}
       }
       
-      if(end != -1)
+      if(end != INVALID_DURATION_VAL)
       {
 	//Add the activity duration 
 	it_map->second->SetMinStart(end);
@@ -204,21 +209,21 @@ void SmartProjMgnt::ComputePERTValsRwnd()
 
       //Check if the successors have valid min_end values
       vector<ActivityNode*> successors = it_map->second->GetSuccessors();
-      int start = 100000;
+      int start = MAX_DURATION_VAL;
       for (vector<ActivityNode*>::iterator it_vect = successors.begin(); it_vect != successors.end(); ++it_vect)
       {
 	//Find the min in max_start duration, thats the end date
-	if((*it_vect)->GetMaxStart() != -1 && (*it_vect)->GetMaxStart() < start)
+	if((*it_vect)->GetMaxStart() != INVALID_DURATION_VAL && (*it_vect)->GetMaxStart() < start)
 	  start = (*it_vect)->GetMaxStart();
 	//If any of the successor values not computed, skip
-	else if((*it_vect)->GetMaxStart() == -1)
+	else if((*it_vect)->GetMaxStart() == INVALID_DURATION_VAL)
 	{
-	  start = 100000;
+	  start = MAX_DURATION_VAL;
 	  break;
 	}
       }
       
-      if( start != 100000)
+      if( start != MAX_DURATION_VAL)
       {
 	//Add the activity duration 
 	it_map->second->SetMaxEnd(start);
@@ -242,7 +247,7 @@ void SmartProjMgnt::AddFinishNode()
   }
 
   //Add Finish node to the Table
-  map["fin"] = new ActivityNode("fin", 0, "", 0);
+  map["fin"] = new ActivityNode("fin", 0, "", "Last Node", "None", 0);
 
   //For all end points 
   for (vector<ActivityNode*>::iterator it_vect = end_points.begin(); it_vect != end_points.end(); ++it_vect)

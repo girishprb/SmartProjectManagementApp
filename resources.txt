@@ -1,0 +1,9 @@
+Project_manager|PM|72
+Senior_engineer|SE1|54
+Senior_analyst|SA|50
+Analyst|A|49
+Engineer|E|47
+Programmer|P|42
+Technician|T|37
+Service_engineer|SE2|37
+
